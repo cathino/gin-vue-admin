@@ -14,15 +14,22 @@
             type="button"
             :class="cn(
               MENU_ICON_BUTTON,
+              showTitleOnCollapse && 'flex-col gap-0.5',
               FOCUS_RING,
               topActive === item.name && 'bg-primary text-white hover:bg-primary'
             )"
             :style="{ height: settings.layout.sideItemHeight + 'px' }"
-            :title="item.meta.title"
+            :title="showTitleOnCollapse ? null : item.meta.title"
             @click="selectTopMenuItem(item.name)"
           >
             <component :is="item.meta.icon" v-if="item.meta.icon" class="h-5 w-5" />
-            <span v-else class="text-[13px]">{{ item.meta.title[0] }}</span>
+            <span v-else-if="!showTitleOnCollapse" class="text-[13px]">{{ item.meta.title[0] }}</span>
+            <span
+              v-if="showTitleOnCollapse"
+              class="w-full truncate px-1 text-center text-[11px] leading-tight"
+            >
+              {{ item.meta.title }}
+            </span>
           </button>
         </nav>
       </el-scrollbar>
@@ -40,6 +47,7 @@
           :items="secondLevelMenus"
           :theme="menuTheme"
           :collapsed="sideCollapse"
+          :collapsed-show-title="showTitleOnCollapse"
           :active="activeKey"
           v-model:open-keys="openKeys"
           :item-height="settings.layout.sideItemHeight"
@@ -74,6 +82,9 @@
 
   const topActive = ref('')
   const secondLevelMenus = ref([])
+
+  // 收起时是否在图标下方展示标题（顶栏一级图标常驻栏与二级折叠栏共用）
+  const showTitleOnCollapse = computed(() => settings.value.layout.showTitleOnCollapse)
 
   const topLevelMenus = computed(() => visibleItems(routerStore.rootMenus))
   const { menuTheme, surfaceClass, siderDarkClass } = useSidebarTheme()

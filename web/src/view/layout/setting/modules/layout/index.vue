@@ -117,10 +117,10 @@
       </div>
     </div>
 
-    <!-- 侧栏尺寸 -->
+    <!-- 侧栏配置 -->
     <div class="mb-6">
       <div class="gva-theme-section-header">
-        <span class="gva-theme-section-title">侧栏尺寸</span>
+        <span class="gva-theme-section-title">侧栏配置</span>
       </div>
       <div class="gva-theme-section-content">
         <div class="gva-theme-card-bg">
@@ -132,6 +132,9 @@
           </SettingItem>
           <SettingItem label="菜单项高度">
             <g-number-field v-model="settings.layout.sideItemHeight" :min="30" :max="50" class="w-28" />
+          </SettingItem>
+          <SettingItem label="收起时是否显示标题">
+            <g-switch v-model="settings.layout.showTitleOnCollapse" aria-label="收起时是否显示标题" />
           </SettingItem>
         </div>
       </div>

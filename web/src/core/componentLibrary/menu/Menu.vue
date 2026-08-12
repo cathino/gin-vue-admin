@@ -19,6 +19,8 @@ const props = defineProps({
     validator: (v) => MENU_THEMES.includes(v)
   },
   collapsed: { type: Boolean, default: false },
+  // 折叠态是否在图标下方展示标题（小字号）
+  collapsedShowTitle: { type: Boolean, default: false },
   active: { type: String, default: '' },
   itemHeight: { type: Number, default: 48 },
   class: { type: null, default: '' }
@@ -62,6 +64,7 @@ const toggle = (node) => {
 provide('gvaMenuCtx', {
   theme: toRef(props, 'theme'),
   collapsed: toRef(props, 'collapsed'),
+  collapsedShowTitle: toRef(props, 'collapsedShowTitle'),
   active: toRef(props, 'active'),
   itemHeight: toRef(props, 'itemHeight'),
   openKeys,
