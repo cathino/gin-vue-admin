@@ -7,17 +7,12 @@
       :style="{ width: settings.layout.sideCollapsedWidth + 'px' }"
     >
       <el-scrollbar>
-        <nav class="flex flex-col gap-1 p-2">
+        <nav class="flex flex-col gap-0.5 py-2" :class="menuNavPad(menuTheme)">
           <button
             v-for="item in topLevelMenus"
             :key="item.name"
             type="button"
-            :class="cn(
-              MENU_ICON_BUTTON,
-              showTitleOnCollapse && 'flex-col gap-0.5',
-              FOCUS_RING,
-              topActive === item.name && 'bg-primary text-white hover:bg-primary'
-            )"
+            :class="menuRailButton(menuTheme, topActive === item.name, showTitleOnCollapse)"
             :style="{ height: settings.layout.sideItemHeight + 'px' }"
             :title="showTitleOnCollapse ? null : item.meta.title"
             @click="selectTopMenuItem(item.name)"
@@ -69,8 +64,7 @@
   import { useMenuActive, useMenuNavigation } from './composables/useMenu'
   import { useSidebarTheme } from './composables/useSidebarTheme'
   import { useSideWidth } from '@/hooks/useSideWidth'
-  import { cn, FOCUS_RING } from '@/core/componentLibrary/utils'
-  import { MENU_ICON_BUTTON } from '@/core/componentLibrary/menu/variants'
+  import { menuNavPad, menuRailButton } from '@/core/componentLibrary/menu/variants'
   import CollapseBar from './CollapseBar.vue'
 
   defineOptions({ name: 'SidebarMode' })

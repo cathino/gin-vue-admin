@@ -10,6 +10,21 @@
       </div>
     </div>
 
+    <!-- 菜单风格 -->
+    <div class="mb-6">
+      <div class="gva-theme-section-header">
+        <span class="gva-theme-section-title">菜单风格</span>
+      </div>
+      <div class="gva-theme-section-content">
+        <MenuThemeSelector v-model="settings.menu.theme" />
+        <div v-if="showDarkSider" class="gva-theme-card-bg mt-3">
+          <SettingItem label="深色侧边栏">
+            <g-switch v-model="settings.menu.darkSider" aria-label="深色侧边栏" />
+          </SettingItem>
+        </div>
+      </div>
+    </div>
+
     <!-- 顶栏：可见性 + 配色 -->
     <div class="mb-6">
       <div class="gva-theme-section-header">
@@ -143,9 +158,12 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useThemeStore } from '@/pinia'
+import { useAppStore, useThemeStore } from '@/pinia'
+import { useLayoutMode } from '@/hooks/useLayoutMode'
 import LayoutModeCard from '../../components/layoutModeCard.vue'
+import MenuThemeSelector from '../../components/menuThemeSelector.vue'
 import SettingItem from '../../components/settingItem.vue'
 
 defineOptions({
@@ -153,5 +171,14 @@ defineOptions({
 })
 
 const themeStore = useThemeStore()
-const { settings } = storeToRefs(themeStore)
+const appStore = useAppStore()
+const { settings, darkMode } = storeToRefs(themeStore)
+const { device } = storeToRefs(appStore)
+const { effectiveMode } = useLayoutMode()
+
+// 「深色侧边栏」仅在浅色主题、且屏幕上确有侧栏（含移动抽屉、平板强制通栏）时可配；
+// 全局暗色或顶部导航（桌面 head）下无意义，隐藏。
+const showDarkSider = computed(
+  () => !darkMode.value && (device.value === 'mobile' || effectiveMode.value !== 'head')
+)
 </script>

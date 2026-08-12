@@ -1,8 +1,7 @@
 <script setup>
 import { computed, inject, provide, ref } from 'vue'
 import { PopoverRoot, PopoverTrigger, PopoverPortal, PopoverContent } from 'reka-ui'
-import { FOCUS_RING } from '../utils'
-import { MENU_ICON_BUTTON } from './variants'
+import { menuRailButton } from './variants'
 import { visibleItems } from './shared'
 import MenuItem from './MenuItem.vue'
 
@@ -48,12 +47,7 @@ provide('gvaMenuCtx', {
     <PopoverTrigger as-child>
       <button
         type="button"
-        :class="[
-          MENU_ICON_BUTTON,
-          showTitle && 'flex-col gap-0.5',
-          FOCUS_RING,
-          isActive() && 'text-active'
-        ]"
+        :class="menuRailButton(ctx.theme.value, isActive(), showTitle)"
         :style="{ height: ctx.itemHeight.value + 'px' }"
         :title="showTitle ? null : node.meta.title"
         @mouseenter="enter"

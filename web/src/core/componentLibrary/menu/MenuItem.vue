@@ -2,7 +2,7 @@
 import { computed, inject } from 'vue'
 import { CollapsibleRoot, CollapsibleTrigger, CollapsibleContent } from 'reka-ui'
 import { cn, FOCUS_RING } from '../utils'
-import { menuItemVariants } from './variants'
+import { menuItemVariants, menuRailButton } from './variants'
 import { menuIndent, visibleItems } from './shared'
 import MenuFlyout from './MenuFlyout.vue'
 
@@ -39,20 +39,20 @@ const rowStyle = computed(() => ({
   paddingLeft: iconOnly.value ? '0px' : menuIndent(props.depth, ctx.theme.value)
 }))
 
+// 折叠图标态走统一的 menuRailButton（与侧栏常驻栏 / 飞出触发同一样式来源）；
+// 展开态才用带层级内边距的普通行样式。
 const rowClass = computed(() =>
-  cn(
-    menuItemVariants({
-      theme: ctx.theme.value,
-      active: isActive.value,
-      role: isGroupHeader.value ? 'header' : 'item'
-    }),
-    stacked.value
-      ? 'flex-col justify-center gap-0.5 px-0'
-      : iconOnly.value
-        ? 'justify-center px-0'
-        : 'px-3',
-    FOCUS_RING
-  )
+  iconOnly.value
+    ? menuRailButton(ctx.theme.value, isActive.value, stacked.value)
+    : cn(
+        menuItemVariants({
+          theme: ctx.theme.value,
+          active: isActive.value,
+          role: isGroupHeader.value ? 'header' : 'item'
+        }),
+        'px-3',
+        FOCUS_RING
+      )
 )
 
 const onLeaf = () => ctx.select(props.node.name)

@@ -1,4 +1,5 @@
 import { cva } from 'class-variance-authority'
+import { cn, FOCUS_RING } from '../utils'
 
 // 菜单项配色变体：三种菜单风格 × 选中态 × 角色（普通项 / 分组标题）。
 // 深浅由侧栏容器的语义 token 决定（见 useSidebarTheme 的 .gva-sider-dark 作用域）。
@@ -53,6 +54,16 @@ export const menuItemVariants = cva(
 // 侧栏容器底色：统一跟随 container（随全局明暗 / .gva-sider-dark 作用域自适应）。
 export const SIDEBAR_SURFACE = 'bg-container text-base-text'
 
-// 折叠图标栏 / 飞出触发的基础按钮样式（图标居中、hover 底；focus ring 由调用方叠加）。
-export const MENU_ICON_BUTTON =
-  'relative flex w-full appearance-none items-center justify-center rounded-lg bg-transparent text-base-text transition-colors hover:bg-muted'
+// 侧栏 nav 的左右内边距：唯一由菜单风格决定，与收缩与否无关。
+// design 贴边（配合左侧竖条美学，px-0）；light / group 留白圆角（px-2）。
+export const menuNavPad = (theme) => (theme === 'design' ? 'px-0' : 'px-2')
+
+// 收缩图标项（含侧栏常驻一级栏、g-menu 折叠叶子、折叠飞出触发）的统一类名来源：
+// 配色 / 圆角 / 选中态全部走 menuItemVariants，跟随菜单风格；此处只叠加“图标居中”与
+// “收起显示标题时竖排”两个布局细节。宽度贴边由外层 nav 的 menuNavPad 统一控制，故此处 px-0。
+export const menuRailButton = (theme, active, stacked = false) =>
+  cn(
+    menuItemVariants({ theme, active, role: 'item' }),
+    stacked ? 'flex-col justify-center gap-0.5 px-0' : 'justify-center px-0',
+    FOCUS_RING
+  )

@@ -3,6 +3,7 @@ import { computed, provide, toRef } from 'vue'
 import HorizontalMenu from './HorizontalMenu.vue'
 import MenuItem from './MenuItem.vue'
 import { MENU_THEMES, findMenuPath, visibleItems } from './shared'
+import { menuNavPad } from './variants'
 
 defineOptions({ name: 'GvaMenu' })
 
@@ -31,10 +32,8 @@ const openKeys = defineModel('openKeys', { type: Array, default: () => [] })
 
 const topItems = computed(() => visibleItems(props.items))
 // 侧栏底色由外层布局容器负责铺满整栏；nav 保持透明。
-// 非 design 且未折叠时给左右留白，让圆角项与栏边有距离；design 走全宽（左侧竖条贴边）。
-const navPadClass = computed(() =>
-  props.collapsed || props.theme === 'design' ? 'px-0' : 'px-2'
-)
+// 左右内边距唯一由菜单风格决定（与收缩与否无关）：design 全宽贴边，light / group 留白圆角。
+const navPadClass = computed(() => menuNavPad(props.theme))
 
 const select = (key) => emit('select', key)
 
