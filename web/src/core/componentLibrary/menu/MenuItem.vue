@@ -2,7 +2,7 @@
 import { computed, inject } from 'vue'
 import { CollapsibleRoot, CollapsibleTrigger, CollapsibleContent } from 'reka-ui'
 import { cn, FOCUS_RING } from '../utils'
-import { menuItemVariants } from './variants'
+import { menuItemVariants, menuRailButton } from './variants'
 import { menuIndent, visibleItems } from './shared'
 import MenuFlyout from './MenuFlyout.vue'
 
@@ -30,6 +30,8 @@ const isFlyout = computed(
 )
 // 折叠态顶层叶子：只显图标
 const iconOnly = computed(() => ctx.collapsed.value && props.depth === 0)
+// 折叠态顶层叶子且开启「收起显示标题」：图标 + 小字号标题竖排
+const stacked = computed(() => iconOnly.value && Boolean(ctx.collapsedShowTitle?.value))
 
 const rowStyle = computed(() => ({
   height: ctx.itemHeight.value + 'px',
@@ -37,16 +39,20 @@ const rowStyle = computed(() => ({
   paddingLeft: iconOnly.value ? '0px' : menuIndent(props.depth, ctx.theme.value)
 }))
 
+// 折叠图标态走统一的 menuRailButton（与侧栏常驻栏 / 飞出触发同一样式来源）；
+// 展开态才用带层级内边距的普通行样式。
 const rowClass = computed(() =>
-  cn(
-    menuItemVariants({
-      theme: ctx.theme.value,
-      active: isActive.value,
-      role: isGroupHeader.value ? 'header' : 'item'
-    }),
-    iconOnly.value ? 'justify-center px-0' : 'px-3',
-    FOCUS_RING
-  )
+  iconOnly.value
+    ? menuRailButton(ctx.theme.value, isActive.value, stacked.value)
+    : cn(
+        menuItemVariants({
+          theme: ctx.theme.value,
+          active: isActive.value,
+          role: isGroupHeader.value ? 'header' : 'item'
+        }),
+        'px-3',
+        FOCUS_RING
+      )
 )
 
 const onLeaf = () => ctx.select(props.node.name)
@@ -88,7 +94,7 @@ const onToggle = () => ctx.toggle(props.node)
     type="button"
     :class="rowClass"
     :style="rowStyle"
-    :title="iconOnly ? node.meta.title : null"
+    :title="iconOnly && !stacked ? node.meta.title : null"
     @click="onLeaf"
   >
     <component
@@ -96,10 +102,16 @@ const onToggle = () => ctx.toggle(props.node)
       v-if="node.meta.icon"
       class="h-[18px] w-[18px] shrink-0"
     />
-    <span v-else-if="iconOnly" class="text-[13px]">{{ node.meta.title[0] }}</span>
+    <span v-else-if="iconOnly && !stacked" class="text-[13px]">{{ node.meta.title[0] }}</span>
     <span v-if="!iconOnly" class="flex-1 truncate text-left">{{
       node.meta.title
     }}</span>
+    <span
+      v-else-if="stacked"
+      class="w-full truncate px-1 text-center text-[11px] leading-tight"
+    >
+      {{ node.meta.title }}
+    </span>
   </button>
 </template>
 
