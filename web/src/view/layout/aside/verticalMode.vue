@@ -21,6 +21,7 @@
         :items="menus"
         :theme="menuTheme"
         :collapsed="sideCollapse"
+        :collapsed-show-title="settings.layout.showTitleOnCollapse"
         :active="activeKey"
         v-model:open-keys="openKeys"
         :item-height="settings.layout.sideItemHeight"

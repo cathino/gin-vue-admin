@@ -31,7 +31,9 @@ export const themeSettings = {
     mode: 'normal',
     sideWidth: 256,
     sideCollapsedWidth: 80,
-    sideItemHeight: 48
+    sideItemHeight: 48,
+    // 收起时是否显示菜单标题：开启后收缩态菜单在图标下方以小字号展示标题
+    showTitleOnCollapse: false
   },
   page: {
     transition: 'slide'
