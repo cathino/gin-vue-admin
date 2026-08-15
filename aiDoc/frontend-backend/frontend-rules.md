@@ -50,6 +50,11 @@
 - 主题相关能力优先通过 CSS 变量控制
 - 反例：用 `<div class="scenario-bar">` + scoped `.scenario-bar { display: flex; gap: 8px; align-items: center }`；正例：直接 `<div class="flex items-center gap-2">`
 
+### 内容区间距
+
+- `gva-search-box` 内没有使用表单承载内容时，最后一行内容必须保留底部内边距，避免贴住容器底边；优先在内容包装层使用 UnoCSS（如 `pb-4`）表达，不为此新增 scoped class 或内联样式。
+- 使用 `el-tabs` / `el-tab-pane` 时，pane 内容区必须与 tabs 导航保留明确的顶部间距；优先给 pane 内层内容容器添加 UnoCSS（如 `pt-4`），具体间距可按页面现有节奏调整，但不得为 `0`，避免首个内容组件与 tabs 紧贴。
+
 ## 图标规范
 
 - 图标统一用全局 `<svg-icon>`（`@/components/svgIcon/svgIcon.vue`），
